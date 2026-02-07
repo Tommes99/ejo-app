@@ -296,10 +296,14 @@ export default function CalendarViewComponent({
           initialDate={formInitialStart}
           initialEndDate={formInitialEnd}
           onSubmit={async (data) => {
+            let result
             if (editingEvent) {
-              await onUpdateEvent(editingEvent.id, data)
+              result = await onUpdateEvent(editingEvent.id, data)
             } else {
-              await onCreateEvent(data)
+              result = await onCreateEvent(data)
+            }
+            if (!result || (result as { error?: { message?: string } }).error) {
+              throw new Error((result as { error?: { message?: string } })?.error?.message || 'Fehler beim Speichern.')
             }
           }}
           onDelete={editingEvent ? async () => { await onDeleteEvent(editingEvent.id) } : undefined}

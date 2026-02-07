@@ -33,7 +33,9 @@ export function useProjects() {
       .select()
       .single()
 
-    if (!error && data) {
+    if (error) {
+      console.error('createProject error:', error.message)
+    } else if (data) {
       setProjects((prev) => [data, ...prev])
     }
     return { data, error }

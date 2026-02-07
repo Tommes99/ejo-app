@@ -44,12 +44,14 @@ export default function TaskDetailPage() {
           projects={projects}
           onSubmit={async (data) => {
             const supabase = createClient()
-            await supabase.from('tasks').update(data).eq('id', task.id)
+            const { error } = await supabase.from('tasks').update(data).eq('id', task.id)
+            if (error) throw new Error(error.message)
             router.push('/aufgaben')
           }}
           onDelete={async () => {
             const supabase = createClient()
-            await supabase.from('tasks').delete().eq('id', task.id)
+            const { error } = await supabase.from('tasks').delete().eq('id', task.id)
+            if (error) throw new Error(error.message)
             router.push('/aufgaben')
           }}
         />

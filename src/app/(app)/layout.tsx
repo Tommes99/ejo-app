@@ -23,6 +23,20 @@ export default async function AppLayout({
         .eq('id', user.id)
         .single()
       profile = data
+
+      // Auto-create profile if it doesn't exist (fallback for missing trigger)
+      if (!profile) {
+        const { data: newProfile } = await supabase
+          .from('profiles')
+          .upsert({
+            id: user.id,
+            full_name: user.user_metadata?.full_name || '',
+            email: user.email || '',
+          })
+          .select('*')
+          .single()
+        profile = newProfile
+      }
     }
   } catch {
     // If Supabase is unavailable, redirect to login

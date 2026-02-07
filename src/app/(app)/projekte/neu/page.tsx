@@ -14,7 +14,10 @@ export default function NeuesProjektPage() {
       <div className="mx-auto max-w-2xl">
         <ProjectForm
           onSubmit={async (data) => {
-            await createProject(data)
+            const result = await createProject(data)
+            if (!result || result.error) {
+              throw new Error(result?.error?.message || 'Fehler beim Speichern.')
+            }
             router.push('/projekte')
           }}
         />

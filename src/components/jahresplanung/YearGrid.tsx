@@ -272,10 +272,14 @@ export default function YearGrid() {
         profiles={profiles}
         initialDate={newEventDate}
         onSubmit={async (data) => {
+          let result
           if (editingEvent) {
-            await updateEvent(editingEvent.id, data)
+            result = await updateEvent(editingEvent.id, data)
           } else {
-            await createEvent(data)
+            result = await createEvent(data)
+          }
+          if (!result || (result as { error?: { message?: string } }).error) {
+            throw new Error((result as { error?: { message?: string } })?.error?.message || 'Fehler beim Speichern.')
           }
         }}
       />

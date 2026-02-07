@@ -63,7 +63,9 @@ export function useTasks(filters?: TaskFilters) {
       .select('*, assigned_profile:profiles!tasks_assigned_to_fkey(*), project:projects(*)')
       .single()
 
-    if (!error && data) {
+    if (error) {
+      console.error('createTask error:', error.message)
+    } else if (data) {
       setTasks((prev) => [data, ...prev])
     }
     return { data, error }

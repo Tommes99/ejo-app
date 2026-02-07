@@ -22,17 +22,26 @@ export default function ProjectForm({
   const [description, setDescription] = useState(project?.description || '')
   const [color, setColor] = useState(project?.color || PROJECT_COLORS[0])
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    setError('')
     setLoading(true)
-    await onSubmit({ name, description, color })
+    try {
+      await onSubmit({ name, description, color })
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Fehler beim Speichern.')
+    }
     setLoading(false)
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <div className="rounded-md bg-red-50 p-3 text-sm text-red-700">{error}</div>
+      )}
       <Input
         id="name"
         label="Projektname"

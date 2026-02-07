@@ -44,7 +44,9 @@ export function useEvents() {
       .select()
       .single()
 
-    if (!error && data) {
+    if (error) {
+      console.error('createEvent error:', error.message)
+    } else if (data) {
       if (responsible_user_ids?.length) {
         await supabase
           .from('event_responsibles')

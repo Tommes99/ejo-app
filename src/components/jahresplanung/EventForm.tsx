@@ -47,6 +47,7 @@ export default function EventForm({
   const [templateId, setTemplateId] = useState(event?.template_id || '')
   const [selectedUsers, setSelectedUsers] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   // Load existing responsible users when editing an event
@@ -83,24 +84,32 @@ export default function EventForm({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    setError('')
     setLoading(true)
-    await onSubmit({
-      title,
-      description,
-      start_date: startDate,
-      end_date: endDate || startDate,
-      color,
-      notes,
-      template_id: templateId || null,
-      responsible_user_ids: selectedUsers,
-    })
+    try {
+      await onSubmit({
+        title,
+        description,
+        start_date: startDate,
+        end_date: endDate || startDate,
+        color,
+        notes,
+        template_id: templateId || null,
+        responsible_user_ids: selectedUsers,
+      })
+      onClose()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Fehler beim Speichern.')
+    }
     setLoading(false)
-    onClose()
   }
 
   return (
     <Modal open={open} onClose={onClose} title={event ? 'Event bearbeiten' : 'Neues Event'}>
       <form onSubmit={handleSubmit} className="space-y-3">
+        {error && (
+          <div className="rounded-md bg-red-50 p-3 text-sm text-red-700">{error}</div>
+        )}
         {templates.length > 0 && (
           <Select
             id="template"

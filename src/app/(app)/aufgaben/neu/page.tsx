@@ -20,7 +20,10 @@ export default function NeueAufgabePage() {
           profiles={profiles}
           projects={projects}
           onSubmit={async (data) => {
-            await createTask(data)
+            const result = await createTask(data)
+            if (!result || result.error) {
+              throw new Error(result?.error?.message || 'Fehler beim Speichern.')
+            }
             router.push('/aufgaben')
           }}
         />

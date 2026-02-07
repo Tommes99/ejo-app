@@ -13,12 +13,18 @@ export default function NeueNeuigkeitPage() {
   const [content, setContent] = useState('')
   const [pinned, setPinned] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    setError('')
     setLoading(true)
-    await createNews({ title, content, pinned })
+    const result = await createNews({ title, content, pinned })
     setLoading(false)
+    if (!result || result.error) {
+      setError(result?.error?.message || 'Fehler beim Speichern. Bitte versuche es erneut.')
+      return
+    }
     router.push('/neuigkeiten')
   }
 
@@ -27,6 +33,9 @@ export default function NeueNeuigkeitPage() {
       <h1 className="mb-6 text-2xl font-bold text-gray-900">Neue Neuigkeit</h1>
       <div className="mx-auto max-w-2xl">
         <form onSubmit={handleSubmit} className="space-y-4">
+          {error && (
+            <div className="rounded-md bg-red-50 p-3 text-sm text-red-700">{error}</div>
+          )}
           <Input
             id="title"
             label="Titel"

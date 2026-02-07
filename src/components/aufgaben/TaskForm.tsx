@@ -36,24 +36,33 @@ export default function TaskForm({
   const [projectId, setProjectId] = useState(task?.project_id || '')
   const [deadline, setDeadline] = useState(task?.deadline || '')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    setError('')
     setLoading(true)
-    await onSubmit({
-      title,
-      description,
-      status,
-      assigned_to: assignedTo || null,
-      project_id: projectId || null,
-      deadline: deadline || null,
-    })
+    try {
+      await onSubmit({
+        title,
+        description,
+        status,
+        assigned_to: assignedTo || null,
+        project_id: projectId || null,
+        deadline: deadline || null,
+      })
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Fehler beim Speichern.')
+    }
     setLoading(false)
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <div className="rounded-md bg-red-50 p-3 text-sm text-red-700">{error}</div>
+      )}
       <Input
         id="title"
         label="Titel"

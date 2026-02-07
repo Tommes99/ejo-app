@@ -35,7 +35,9 @@ export function useNews() {
       .select('*, author:profiles!news_author_id_fkey(*)')
       .single()
 
-    if (!error && data) {
+    if (error) {
+      console.error('createNews error:', error.message)
+    } else if (data) {
       setNews((prev) => [data, ...prev])
     }
     return { data, error }

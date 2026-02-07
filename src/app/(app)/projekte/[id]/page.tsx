@@ -50,18 +50,20 @@ export default function ProjectDetailPage() {
             project={project}
             onSubmit={async (data) => {
               const supabase = createClient()
-              const { data: updated } = await supabase
+              const { data: updated, error } = await supabase
                 .from('projects')
                 .update(data)
                 .eq('id', project.id)
                 .select()
                 .single()
+              if (error) throw new Error(error.message)
               if (updated) setProject(updated)
               setEditing(false)
             }}
             onDelete={async () => {
               const supabase = createClient()
-              await supabase.from('projects').delete().eq('id', project.id)
+              const { error } = await supabase.from('projects').delete().eq('id', project.id)
+              if (error) throw new Error(error.message)
               router.push('/projekte')
             }}
           />
