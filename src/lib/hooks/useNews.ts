@@ -27,7 +27,10 @@ export function useNews() {
   async function createNews(post: { title: string; content: string; pinned?: boolean }) {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return null
+    if (!user) {
+      window.location.href = '/login'
+      return null
+    }
 
     const { data, error } = await supabase
       .from('news')

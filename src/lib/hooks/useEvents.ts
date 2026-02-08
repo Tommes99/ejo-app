@@ -35,7 +35,10 @@ export function useEvents() {
   }) {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return null
+    if (!user) {
+      window.location.href = '/login'
+      return null
+    }
 
     const { responsible_user_ids, ...eventData } = event
     const { data, error } = await supabase
