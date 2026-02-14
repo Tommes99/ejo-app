@@ -27,6 +27,8 @@ Vereinfachtes Verwaltungstool fuer eine Jugendorganisation. Die App bietet Aufga
 | DB-Passwort | `all4muile43348` |
 | Direct String | `postgresql://postgres:all4muile43348@db.poxcdrvzdvipkrozfjej.supabase.co:5432/postgres` |
 
+Anon key nicht up to date, aus .env.local nehmen
+
 ## Erste Schritte
 
 ### 1. Abhaengigkeiten installieren
