@@ -11,6 +11,7 @@ export const NAV_ITEMS = [
   { href: '/aufgaben', label: 'Aufgaben', icon: 'CheckSquare' as const },
   { href: '/projekte', label: 'Projekte', icon: 'FolderOpen' as const },
   { href: '/neuigkeiten', label: 'Neuigkeiten', icon: 'Newspaper' as const },
+  { href: '/abstimmungen', label: 'Abstimmungen', icon: 'BarChart3' as const },
   { href: '/einstellungen', label: 'Einstellungen', icon: 'Settings' as const },
 ]
 
@@ -21,6 +22,17 @@ export const DEFAULT_EVENT_TEMPLATES = [
   { name: 'Konfi-Arbeit', default_title: 'Konfi-Arbeit', default_color: '#8B5CF6' },
   { name: 'Elternabend', default_title: 'Elternabend', default_color: '#F59E0B' },
   { name: 'Gottesdienst', default_title: 'Gottesdienst', default_color: '#06B6D4' },
+]
+
+export const POLL_STATUS_OPTIONS = [
+  { value: 'aktiv' as const, label: 'Aktiv', color: 'bg-green-100 text-green-800' },
+  { value: 'geschlossen' as const, label: 'Geschlossen', color: 'bg-gray-100 text-gray-800' },
+  { value: 'archiviert' as const, label: 'Archiviert', color: 'bg-slate-100 text-slate-500' },
+]
+
+export const POLL_TYPE_OPTIONS = [
+  { value: 'date_poll' as const, label: 'Terminumfrage' },
+  { value: 'decision_poll' as const, label: 'Entscheidungsumfrage' },
 ]
 
 export const PROJECT_COLORS = [

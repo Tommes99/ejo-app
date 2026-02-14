@@ -4,17 +4,20 @@ import QuickActions from '@/components/dashboard/QuickActions'
 import NewsFeed from '@/components/dashboard/NewsFeed'
 import UpcomingTasks from '@/components/dashboard/UpcomingTasks'
 import UpcomingEvents from '@/components/dashboard/UpcomingEvents'
+import ActivePolls from '@/components/dashboard/ActivePolls'
 import LoadingSpinner from '@/components/ui/LoadingSpinner'
 import { useTasks } from '@/lib/hooks/useTasks'
 import { useEvents } from '@/lib/hooks/useEvents'
 import { useNews } from '@/lib/hooks/useNews'
+import { usePolls } from '@/lib/hooks/usePolls'
 
 export default function DashboardPage() {
   const { tasks, loading: tasksLoading } = useTasks()
   const { events, loading: eventsLoading } = useEvents()
   const { news, loading: newsLoading } = useNews()
+  const { polls, loading: pollsLoading } = usePolls()
 
-  const loading = tasksLoading || eventsLoading || newsLoading
+  const loading = tasksLoading || eventsLoading || newsLoading || pollsLoading
 
   return (
     <div>
@@ -32,6 +35,7 @@ export default function DashboardPage() {
             <NewsFeed news={news} />
           </div>
           <div className="space-y-6">
+            <ActivePolls polls={polls} />
             <UpcomingTasks tasks={tasks} />
             <UpcomingEvents events={events} />
           </div>

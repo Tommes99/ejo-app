@@ -62,6 +62,55 @@ export type CalendarEvent = {
   responsibles?: Profile[]
 }
 
+// Polls
+export type PollType = 'date_poll' | 'decision_poll'
+export type PollStatus = 'aktiv' | 'geschlossen' | 'archiviert'
+export type VoteValue = 'yes' | 'no' | 'maybe'
+
+export type Poll = {
+  id: string
+  title: string
+  description: string | null
+  poll_type: PollType
+  status: PollStatus
+  deadline: string | null
+  allow_vote_change: boolean
+  show_results_before_voting: boolean
+  linked_event_id: string | null
+  created_by: string
+  created_at: string
+  updated_at: string
+  // Joined
+  creator?: Profile | null
+  options?: PollOption[]
+  vote_count?: number
+  voter_count?: number
+  voted_by_me?: boolean
+}
+
+export type PollOption = {
+  id: string
+  poll_id: string
+  label: string
+  option_date: string | null
+  option_time_start: string | null
+  option_time_end: string | null
+  position: number
+  created_at: string
+}
+
+export type PollVote = {
+  id: string
+  poll_id: string
+  option_id: string
+  voter_user_id: string
+  display_name: string
+  vote: VoteValue
+  comment: string | null
+  created_at: string
+  updated_at: string
+}
+
 export type NewsPost = {
   id: string
   title: string

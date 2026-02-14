@@ -9,6 +9,7 @@ import {
   FolderOpen,
   CalendarDays,
   Newspaper,
+  BarChart3,
   Settings,
   X,
   ChevronLeft,
@@ -23,6 +24,7 @@ const iconMap = {
   FolderOpen,
   CalendarDays,
   Newspaper,
+  BarChart3,
   Settings,
 } as const
 
