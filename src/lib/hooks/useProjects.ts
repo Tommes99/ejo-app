@@ -22,7 +22,7 @@ export function useProjects() {
     fetchProjects()
   }, [fetchProjects])
 
-  async function createProject(project: { name: string; description?: string; color?: string }) {
+  async function createProject(project: { name: string; description?: string; color?: string; status?: string }) {
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) {

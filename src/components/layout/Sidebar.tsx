@@ -66,20 +66,21 @@ export default function Sidebar({
             <Image
               src="/ejo-logo.svg"
               alt="EJO"
-              width={160}
-              height={56}
-              className="h-11 w-auto brightness-0 invert"
+              width={200}
+              height={64}
+              className="h-14 w-auto brightness-0 invert"
             />
           </Link>
           {collapsed && (
-            <Link href="/dashboard" className="hidden md:block" onClick={onClose}>
-              <Image
-                src="/ejo-logo.svg"
-                alt="EJO"
-                width={32}
-                height={32}
-                className="h-7 w-7 brightness-0 invert object-contain"
-              />
+            <Link href="/dashboard" className="hidden md:flex items-center justify-center" onClick={onClose}>
+              <div className="relative h-9 w-9 overflow-hidden rounded">
+                <Image
+                  src="/ejo-logo.svg"
+                  alt="EJO"
+                  fill
+                  className="brightness-0 invert object-cover object-right"
+                />
+              </div>
             </Link>
           )}
           <button onClick={onClose} className="md:hidden">

@@ -40,24 +40,42 @@ export default function PollDetailPage() {
 
   async function handleClose() {
     setActionLoading(true)
-    const supabase = createClient()
-    await supabase.from('polls').update({ status: 'geschlossen' }).eq('id', pollId)
-    router.refresh()
-    window.location.reload()
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.from('polls').update({ status: 'geschlossen' }).eq('id', pollId)
+      if (error) throw error
+      router.refresh()
+    } catch (err) {
+      console.error('handleClose error:', err)
+    } finally {
+      setActionLoading(false)
+    }
   }
 
   async function handleArchive() {
     setActionLoading(true)
-    const supabase = createClient()
-    await supabase.from('polls').update({ status: 'archiviert' }).eq('id', pollId)
-    router.push('/abstimmungen')
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.from('polls').update({ status: 'archiviert' }).eq('id', pollId)
+      if (error) throw error
+      router.push('/abstimmungen')
+    } catch (err) {
+      console.error('handleArchive error:', err)
+      setActionLoading(false)
+    }
   }
 
   async function handleDelete() {
     setActionLoading(true)
-    const supabase = createClient()
-    await supabase.from('polls').delete().eq('id', pollId)
-    router.push('/abstimmungen')
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.from('polls').delete().eq('id', pollId)
+      if (error) throw error
+      router.push('/abstimmungen')
+    } catch (err) {
+      console.error('handleDelete error:', err)
+      setActionLoading(false)
+    }
   }
 
   return (

@@ -11,6 +11,9 @@ import { useProjects } from '@/lib/hooks/useProjects'
 export default function ProjektePage() {
   const { projects, loading } = useProjects()
 
+  const active = projects.filter((p) => p.status !== 'archiviert')
+  const archived = projects.filter((p) => p.status === 'archiviert')
+
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
@@ -34,10 +37,28 @@ export default function ProjektePage() {
           }
         />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
-          ))}
+        <div className="space-y-8">
+          {active.length > 0 && (
+            <div>
+              <h2 className="mb-3 text-lg font-semibold text-gray-800">In Bearbeitung</h2>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {active.map((project) => (
+                  <ProjectCard key={project.id} project={project} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {archived.length > 0 && (
+            <div>
+              <h2 className="mb-3 text-lg font-semibold text-gray-500">Archiviert</h2>
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {archived.map((project) => (
+                  <ProjectCard key={project.id} project={project} />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

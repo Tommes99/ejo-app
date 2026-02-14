@@ -19,13 +19,18 @@ export default function TaskDetailPage() {
 
   useEffect(() => {
     async function fetchTask() {
-      const supabase = createClient()
-      const { data } = await supabase
-        .from('tasks')
-        .select('*, assigned_profile:profiles!tasks_assigned_to_fkey(*), project:projects(*)')
-        .eq('id', params.id)
-        .single()
-      setTask(data)
+      try {
+        const supabase = createClient()
+        const { data, error } = await supabase
+          .from('tasks')
+          .select('*, assigned_profile:profiles!tasks_assigned_to_fkey(*), project:projects(*)')
+          .eq('id', params.id)
+          .single()
+        if (error) console.error('fetchTask error:', error.message)
+        setTask(data)
+      } catch (err) {
+        console.error('fetchTask error:', err)
+      }
       setLoading(false)
     }
     fetchTask()

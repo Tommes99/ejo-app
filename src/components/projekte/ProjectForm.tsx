@@ -4,9 +4,9 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
-import { PROJECT_COLORS } from '@/lib/constants'
+import { PROJECT_COLORS, PROJECT_STATUS_OPTIONS } from '@/lib/constants'
 import { cn } from '@/lib/utils'
-import type { Project } from '@/lib/types/database'
+import type { Project, ProjectStatus } from '@/lib/types/database'
 
 export default function ProjectForm({
   project,
@@ -14,13 +14,14 @@ export default function ProjectForm({
   onDelete,
 }: {
   project?: Project
-  onSubmit: (data: { name: string; description: string; color: string }) => Promise<void>
+  onSubmit: (data: { name: string; description: string; color: string; status: ProjectStatus }) => Promise<void>
   onDelete?: () => Promise<void>
 }) {
   const router = useRouter()
   const [name, setName] = useState(project?.name || '')
   const [description, setDescription] = useState(project?.description || '')
   const [color, setColor] = useState(project?.color || PROJECT_COLORS[0])
+  const [status, setStatus] = useState<ProjectStatus>(project?.status || 'in_bearbeitung')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
@@ -30,7 +31,7 @@ export default function ProjectForm({
     setError('')
     setLoading(true)
     try {
-      await onSubmit({ name, description, color })
+      await onSubmit({ name, description, color, status })
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Fehler beim Speichern.')
     }
@@ -82,6 +83,29 @@ export default function ProjectForm({
           ))}
         </div>
       </div>
+
+      {project && (
+        <div>
+          <label className="mb-1 block text-sm font-medium text-gray-700">Status</label>
+          <div className="flex gap-2">
+            {PROJECT_STATUS_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => setStatus(opt.value)}
+                className={cn(
+                  'rounded-md px-3 py-1.5 text-sm font-medium transition-colors',
+                  status === opt.value
+                    ? opt.color
+                    : 'bg-gray-50 text-gray-500 hover:bg-gray-100'
+                )}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="flex items-center gap-3 pt-2">
         <Button type="submit" disabled={loading || !name.trim()}>

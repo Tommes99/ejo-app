@@ -7,14 +7,19 @@ export type Profile = {
   updated_at: string
 }
 
+export type ProjectStatus = 'in_bearbeitung' | 'archiviert'
+
 export type Project = {
   id: string
   name: string
   description: string | null
   color: string
+  status: ProjectStatus
   created_by: string
   created_at: string
   updated_at: string
+  // Joined fields
+  members?: Profile[]
 }
 
 export type TaskStatus = 'offen' | 'in_bearbeitung' | 'erledigt' | 'archiviert'

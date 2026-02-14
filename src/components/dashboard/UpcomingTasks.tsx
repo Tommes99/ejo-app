@@ -7,7 +7,7 @@ import type { Task } from '@/lib/types/database'
 export default function UpcomingTasks({ tasks }: { tasks: Task[] }) {
   const upcoming = tasks
     .filter((t) => t.deadline && t.status !== 'archiviert')
-    .sort((a, b) => (a.deadline! > b.deadline! ? 1 : -1))
+    .sort((a, b) => (a.deadline ?? '') > (b.deadline ?? '') ? 1 : -1)
     .slice(0, 5)
 
   return (

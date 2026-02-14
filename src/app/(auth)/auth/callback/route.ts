@@ -4,7 +4,10 @@ import { createClient } from '@/lib/supabase/server'
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/dashboard'
+  const nextParam = searchParams.get('next') ?? '/dashboard'
+
+  // Validate redirect path to prevent open redirect attacks
+  const next = nextParam.startsWith('/') && !nextParam.startsWith('//') ? nextParam : '/dashboard'
 
   if (code) {
     try {
@@ -13,8 +16,9 @@ export async function GET(request: Request) {
       if (!error) {
         return NextResponse.redirect(`${origin}${next}`)
       }
-    } catch {
-      // If Supabase client creation fails, fall through to login redirect
+      console.error('Auth callback: exchangeCodeForSession failed:', error.message)
+    } catch (err) {
+      console.error('Auth callback: unexpected error:', err)
     }
   }
 

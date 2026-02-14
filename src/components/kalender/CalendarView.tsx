@@ -201,14 +201,18 @@ export default function CalendarViewComponent({
   }
 
   // Drag-and-drop move or resize an event
-  function handleEventDropOrResize({ event, start, end }: EventInteractionArgs<CalendarEntry>) {
+  async function handleEventDropOrResize({ event, start, end }: EventInteractionArgs<CalendarEntry>) {
     if (event.type !== 'event') return
     const startDate = toDateStr(start as Date)
     // react-big-calendar gives exclusive end for allDay, subtract 1 day
     const endRaw = new Date(end as Date)
     endRaw.setDate(endRaw.getDate() - 1)
     const endDate = toDateStr(endRaw.getTime() < (start as Date).getTime() ? (start as Date) : endRaw)
-    onUpdateEvent(event.id, { start_date: startDate, end_date: endDate })
+    try {
+      await onUpdateEvent(event.id, { start_date: startDate, end_date: endDate })
+    } catch (err) {
+      console.error('Event drag/drop error:', err)
+    }
   }
 
   // Click on event -> edit form for events, detail modal for tasks

@@ -120,7 +120,9 @@ export default function YearGrid() {
     newEnd.setDate(newEnd.getDate() + daysDiff)
     const endStr = toDateStr(newEnd)
 
-    updateEvent(eventId, { start_date: newDate, end_date: endStr })
+    updateEvent(eventId, { start_date: newDate, end_date: endStr }).catch((err: unknown) => {
+      console.error('YearGrid drag error:', err)
+    })
   }
 
   return (

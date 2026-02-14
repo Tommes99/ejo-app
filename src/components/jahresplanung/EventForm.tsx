@@ -85,13 +85,18 @@ export default function EventForm({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
+    const effectiveEnd = endDate || startDate
+    if (effectiveEnd < startDate) {
+      setError('Enddatum darf nicht vor dem Startdatum liegen.')
+      return
+    }
     setLoading(true)
     try {
       await onSubmit({
         title,
         description,
         start_date: startDate,
-        end_date: endDate || startDate,
+        end_date: effectiveEnd,
         color,
         notes,
         template_id: templateId || null,
