@@ -1,17 +1,20 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
-import { CheckCircle2 } from 'lucide-react'
+import { CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react'
 import Card from '@/components/ui/Card'
-import Button from '@/components/ui/Button'
 import Badge from '@/components/ui/Badge'
 import { formatRelative } from '@/lib/utils'
 import type { Poll } from '@/lib/types/database'
 
+const PAGE_SIZE = 5
+
 export default function ActivePolls({ polls }: { polls: Poll[] }) {
-  const active = polls
-    .filter((p) => p.status === 'aktiv')
-    .slice(0, 5)
+  const [page, setPage] = useState(0)
+  const active = polls.filter((p) => p.status === 'aktiv')
+  const totalPages = Math.ceil(active.length / PAGE_SIZE)
+  const paged = active.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
 
   if (active.length === 0) {
     return (
@@ -31,7 +34,7 @@ export default function ActivePolls({ polls }: { polls: Poll[] }) {
         </Link>
       </div>
       <div className="space-y-2">
-        {active.map((poll) => (
+        {paged.map((poll) => (
           <Link
             key={poll.id}
             href={`/abstimmungen/${poll.id}`}
@@ -54,10 +57,26 @@ export default function ActivePolls({ polls }: { polls: Poll[] }) {
           </Link>
         ))}
       </div>
-      {polls.filter((p) => p.status === 'aktiv').length > 5 && (
-        <Link href="/abstimmungen" className="mt-3 block text-sm text-blue-600 hover:text-blue-500">
-          Alle Abstimmungen anzeigen
-        </Link>
+      {totalPages > 1 && (
+        <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
+          <button
+            onClick={() => setPage((p) => p - 1)}
+            disabled={page === 0}
+            className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 disabled:opacity-30 disabled:cursor-default"
+          >
+            <ChevronLeft size={14} /> Zurück
+          </button>
+          <span className="text-xs text-gray-400">
+            {page + 1} / {totalPages}
+          </span>
+          <button
+            onClick={() => setPage((p) => p + 1)}
+            disabled={page >= totalPages - 1}
+            className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 disabled:opacity-30 disabled:cursor-default"
+          >
+            Weiter <ChevronRight size={14} />
+          </button>
+        </div>
       )}
     </Card>
   )

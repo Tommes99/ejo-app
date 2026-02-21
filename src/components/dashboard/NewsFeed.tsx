@@ -1,13 +1,20 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
-import { Pin } from 'lucide-react'
+import { Pin, ChevronLeft, ChevronRight } from 'lucide-react'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 import { formatRelative } from '@/lib/utils'
 import type { NewsPost } from '@/lib/types/database'
 
+const PAGE_SIZE = 10
+
 export default function NewsFeed({ news }: { news: NewsPost[] }) {
+  const [page, setPage] = useState(0)
+  const totalPages = Math.ceil(news.length / PAGE_SIZE)
+  const paged = news.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
+
   if (news.length === 0) {
     return (
       <Card>
@@ -29,7 +36,7 @@ export default function NewsFeed({ news }: { news: NewsPost[] }) {
         </Link>
       </div>
       <div className="space-y-3">
-        {news.slice(0, 5).map((post) => (
+        {paged.map((post) => (
           <div key={post.id} className="border-b border-gray-100 pb-3 last:border-0 last:pb-0">
             <div className="flex items-start gap-2">
               {post.pinned && <Pin size={12} className="mt-1 text-blue-500" />}
@@ -45,10 +52,26 @@ export default function NewsFeed({ news }: { news: NewsPost[] }) {
           </div>
         ))}
       </div>
-      {news.length > 5 && (
-        <Link href="/neuigkeiten" className="mt-3 block text-sm text-blue-600 hover:text-blue-500">
-          Alle Neuigkeiten anzeigen
-        </Link>
+      {totalPages > 1 && (
+        <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
+          <button
+            onClick={() => setPage((p) => p - 1)}
+            disabled={page === 0}
+            className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 disabled:opacity-30 disabled:cursor-default"
+          >
+            <ChevronLeft size={14} /> Zurück
+          </button>
+          <span className="text-xs text-gray-400">
+            {page + 1} / {totalPages}
+          </span>
+          <button
+            onClick={() => setPage((p) => p + 1)}
+            disabled={page >= totalPages - 1}
+            className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 disabled:opacity-30 disabled:cursor-default"
+          >
+            Weiter <ChevronRight size={14} />
+          </button>
+        </div>
       )}
     </Card>
   )

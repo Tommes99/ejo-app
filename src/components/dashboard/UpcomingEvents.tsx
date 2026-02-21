@@ -1,14 +1,23 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
+import { ChevronLeft, ChevronRight } from 'lucide-react'
 import Card from '@/components/ui/Card'
 import { formatDate } from '@/lib/utils'
 import type { CalendarEvent } from '@/lib/types/database'
 
+const PAGE_SIZE = 5
+
 export default function UpcomingEvents({ events }: { events: CalendarEvent[] }) {
+  const [page, setPage] = useState(0)
   const today = new Date().toISOString().split('T')[0]
   const upcoming = events
     .filter((e) => e.end_date >= today)
     .sort((a, b) => (a.start_date > b.start_date ? 1 : -1))
-    .slice(0, 5)
+
+  const totalPages = Math.ceil(upcoming.length / PAGE_SIZE)
+  const paged = upcoming.slice(page * PAGE_SIZE, (page + 1) * PAGE_SIZE)
 
   return (
     <Card>
@@ -18,11 +27,11 @@ export default function UpcomingEvents({ events }: { events: CalendarEvent[] }) 
           Kalender
         </Link>
       </div>
-      {upcoming.length === 0 ? (
+      {paged.length === 0 ? (
         <p className="text-sm text-gray-500">Keine anstehenden Events.</p>
       ) : (
         <div className="space-y-2">
-          {upcoming.map((event) => (
+          {paged.map((event) => (
             <div
               key={event.id}
               className="flex items-center justify-between rounded-md p-2 text-sm hover:bg-gray-50"
@@ -40,6 +49,27 @@ export default function UpcomingEvents({ events }: { events: CalendarEvent[] }) 
               </span>
             </div>
           ))}
+        </div>
+      )}
+      {totalPages > 1 && (
+        <div className="mt-3 flex items-center justify-between border-t border-gray-100 pt-3">
+          <button
+            onClick={() => setPage((p) => p - 1)}
+            disabled={page === 0}
+            className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 disabled:opacity-30 disabled:cursor-default"
+          >
+            <ChevronLeft size={14} /> Zurück
+          </button>
+          <span className="text-xs text-gray-400">
+            {page + 1} / {totalPages}
+          </span>
+          <button
+            onClick={() => setPage((p) => p + 1)}
+            disabled={page >= totalPages - 1}
+            className="flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 disabled:opacity-30 disabled:cursor-default"
+          >
+            Weiter <ChevronRight size={14} />
+          </button>
         </div>
       )}
     </Card>

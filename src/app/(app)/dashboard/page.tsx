@@ -10,8 +10,10 @@ import { useTasks } from '@/lib/hooks/useTasks'
 import { useEvents } from '@/lib/hooks/useEvents'
 import { useNews } from '@/lib/hooks/useNews'
 import { usePolls } from '@/lib/hooks/usePolls'
+import { useUser } from '@/lib/hooks/useUser'
 
 export default function DashboardPage() {
+  const { profile } = useUser()
   const { tasks, loading: tasksLoading } = useTasks()
   const { events, loading: eventsLoading } = useEvents()
   const { news, loading: newsLoading } = useNews()
@@ -36,7 +38,7 @@ export default function DashboardPage() {
           </div>
           <div className="space-y-6">
             <ActivePolls polls={polls} />
-            <UpcomingTasks tasks={tasks} />
+            <UpcomingTasks tasks={tasks} userId={profile?.id} />
             <UpcomingEvents events={events} />
           </div>
         </div>
